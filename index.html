@@ -1,0 +1,45 @@
+<html>
+  <body>
+    <header>
+      <h1>netcdf-wasm</h1>
+    </header>
+    <main>
+      <p>
+        <label
+          >1. Choose a file
+          <input id="myfile" type="file" />
+        </label>
+      </p>
+      <p>
+        <label>
+          2. Hit Go
+          <button id="mybutton" onclick="go();">Go</button>
+        </label>
+      </p>
+      <p>Check your <code>console.log</code>.</p>
+    </main>
+
+    <script src="/a.out.js"></script>
+    <script>
+      Module.onRuntimeInitialized = async _ => {
+        const api = {
+          version: Module.cwrap("main", "number", [])
+        };
+        console.log(api.version());
+      };
+
+      function go() {
+        console.log("go!");
+        const fileinput = document.getElementById("myfile");
+        const file = fileinput.files[0];
+        console.log(file);
+
+        const reader = new FileReader();
+        reader.onload = function(evt) {
+          console.log(evt.target.result);
+        };
+        reader.readAsArrayBuffer(file);
+      }
+    </script>
+  </body>
+</html>
