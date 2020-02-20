@@ -5,5 +5,8 @@
 
 EMSCRIPTEN_KEEPALIVE
 int main() {
-  return NC_MAX_INT;
+  int ncid;
+  int retval = nc_open("asdf.cdf", NC_NOWRITE, &ncid);
+
+  return retval;
 }

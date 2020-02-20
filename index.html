@@ -37,6 +37,16 @@
         const reader = new FileReader();
         reader.onload = function(evt) {
           console.log(evt.target.result);
+
+          Module["FS_createDataFile"](
+            "/",
+            "filename",
+            evt.target.result,
+            true,
+            true,
+            true
+          );
+          Module.ccall("main", null, [], null);
         };
         reader.readAsArrayBuffer(file);
       }
