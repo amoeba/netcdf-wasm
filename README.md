@@ -7,10 +7,10 @@ This is opposed to using a JavaScript implementation which may or may not work a
 
 ## Setup
 
-0. Set up Emscripten. I strongly recommend
+1. Set up Emscripten. I strongly recommend
    [the official docs](https://emscripten.org/docs/getting_started/downloads.html).
 
-1. Grab the NetCDF C library:
+2. Grab the NetCDF C library:
 
    ```sh
    git clone https://github.com/Unidata/netcdf-c
@@ -18,10 +18,16 @@ This is opposed to using a JavaScript implementation which may or may not work a
 
    i.e., you should have a `netcdf-c` directory under the root of your checkout of this repo before moving on with subfolders like `include`.
 
-1. Build this:
+3. Build this:
 
    ```sh
    sh build.sh
+   ```
+
+4. Serve index.html with a web server. [devd](https://github.com/cortesi/devd) is a really good choice:
+
+   ```sh
+   devd . -o
    ```
 
 ## TODO
