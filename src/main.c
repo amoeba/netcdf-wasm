@@ -1,7 +1,6 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <netcdf.h>
-
 #include "emscripten.h"
 
 EMSCRIPTEN_KEEPALIVE
@@ -12,7 +11,7 @@ int main() {
   // Just check symbols from netcdf.h work...
   NC_INT;
 
-  // Try nc_create for now for testing/debuggin
+  // Try nc_create for now for testing/debugging
   retval = nc_create("simple_xy.nc", NC_CLOBBER, &ncid);
 
   return retval;
