@@ -23,33 +23,12 @@
     <script>
       Module.onRuntimeInitialized = async _ => {
         const api = {
-          version: Module.cwrap("main", "number", [])
+          main: Module.cwrap("main", "number", [])
         };
-        console.log(api.version());
+
+        console.log(api);
+        console.log(api.main());
       };
-
-      function go() {
-        console.log("go!");
-        const fileinput = document.getElementById("myfile");
-        const file = fileinput.files[0];
-        console.log(file);
-
-        const reader = new FileReader();
-        reader.onload = function(evt) {
-          console.log(evt.target.result);
-
-          Module["FS_createDataFile"](
-            "/",
-            "filename",
-            evt.target.result,
-            true,
-            true,
-            true
-          );
-          Module.ccall("main", null, [], null);
-        };
-        reader.readAsArrayBuffer(file);
-      }
     </script>
   </body>
 </html>
