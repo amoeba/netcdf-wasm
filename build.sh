@@ -8,5 +8,5 @@ if [ ! -d "netcdf-c" ]; then
 fi
 
 echo "Building..."
-emcc -O3 -s WASM=1 -s EXTRA_EXPORTED_RUNTIME_METHODS='["cwrap"]' -I netcdf-c/include src/main.c
+emcc -O3 -s WASM=1 -s EXTRA_EXPORTED_RUNTIME_METHODS='["cwrap"]' -I /usr/local/Cellar/curl/7.68.0/include -I netcdf-c/include src/main.c -I netcdf-c netcdf-c/libdispatch/*.c
 echo "Done. Check index.html and a.out.js."
