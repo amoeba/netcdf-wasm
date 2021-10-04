@@ -1,55 +1,37 @@
 # `netcdf-wasm`
 
-WIP project to work with [NetCDF ](https://www.unidata.ucar.edu/software/netcdf/) files in the browser with [WASM](https://webassembly.org/).
+**Currently not working** project to work with [NetCDF](https://www.unidata.ucar.edu/software/netcdf/) files in the browser with [WASM](https://webassembly.org/).
 Nothing usable at this point.
 The ultimate goal is to get a native way to parse metadata out of NetCDF files for use in scientific metadata editors.
-This is opposed to using a JavaScript implementation which may or may not work as well as the standard C library.
+This is mostly for my education.
 
-## Setup
+## Pre-requisites
 
-1. Set up Emscripten. I strongly recommend
-   [the official docs](https://emscripten.org/docs/getting_started/downloads.html).
+- emscripten
+- libnetcdf
+- libhdf5
+- libzlib
 
-2. Grab the NetCDF C library:
+## Building
 
-   ```sh
-   git clone https://github.com/Unidata/netcdf-c
-   ```
+Note: This is what _I_ run and probably won't work for you. Edit the `-I` flags to point to the right locations.
 
-   i.e., you should have a `netcdf-c` directory under the root of your checkout of this repo before moving on with subfolders like `include`.
-
-3. Build this:
-
-   ```sh
-   sh build.sh
-   ```
-
-4. Serve index.html with a web server. [devd](https://github.com/cortesi/devd) is a really good choice:
-
-   ```sh
-   devd . -o
-   ```
+```
+emcc -O3 -s WASM=1 -I /usr/local/Cellar/curl/*/include -I /usr/local/Cellar/hdf5/*/include -I /usr/local/Cellar/netcdf/*/include src/main.c
+```
 
 ## Status
 
-Where does `NCU_OK` come from?
+The build current fails. I'm not sure why:
 
 ```
-❯ emcc -O3 -s WASM=1 -s EXTRA_EXPORTED_RUNTIME_METHODS='["cwrap"]' -I /usr/local/Cellar/curl/7.68.0/include -I netcdf-c/include src/main.c -I netcdf-c netcdf-c/libdispatch/*.c
-netcdf-c/libdispatch/durlmodel.c:140:33: error: use of undeclared identifier
-      'NCU_OK'
-    if(ncuriparse(path,&uri) == NCU_OK) {
-                                ^
-netcdf-c/libdispatch/durlmodel.c:177:33: error: use of undeclared identifier
-      'NCU_OK'
-    if(ncuriparse(path,&url) != NCU_OK)
-                                ^
-netcdf-c/libdispatch/durlmodel.c:261:34: error: use of undeclared identifier
-      'NCU_OK'
-    if(ncuriparse(path,&tmpurl)==NCU_OK) {
-                                 ^
-3 errors generated.
-shared:ERROR: '/Users/bryce/src/emsdk/upstream/bin/clang -target wasm32-unknown-emscripten -D__EMSCRIPTEN_major__=1 -D__EMSCRIPTEN_minor__=39 -D__EMSCRIPTEN_tiny__=8 -D_LIBCPP_ABI_VERSION=2 -Dunix -D__unix -D__unix__ -Werror=implicit-function-declaration -Xclang -nostdsysteminc -Xclang -isystem/Users/bryce/src/emsdk/upstream/emscripten/system/include/libcxx -Xclang -isystem/Users/bryce/src/emsdk/upstream/emscripten/system/lib/libcxxabi/include -Xclang -isystem/Users/bryce/src/emsdk/upstream/emscripten/system/include/compat -Xclang -isystem/Users/bryce/src/emsdk/upstream/emscripten/system/include -Xclang -isystem/Users/bryce/src/emsdk/upstream/emscripten/system/include/libc -Xclang -isystem/Users/bryce/src/emsdk/upstream/emscripten/system/lib/libc/musl/arch/emscripten -Xclang -isystem/Users/bryce/src/emsdk/upstream/emscripten/system/local/include -Xclang -isystem/Users/bryce/.emscripten_cache/wasm-obj/include -O3 -I/usr/local/Cellar/curl/7.68.0/include -Inetcdf-c/include -Inetcdf-c -DEMSCRIPTEN netcdf-c/libdispatch/durlmodel.c -Xclang -isystem/Users/bryce/src/emsdk/upstream/emscripten/system/include/SDL -c -o /var/folders/jy/zkmn3bgj13710pnytbgh27800000gn/T/emscripten_temp_xwBoLv/durlmodel_30.o -mllvm -combiner-global-alias-analysis=false -mllvm -enable-emscripten-sjlj -mllvm -disable-lsr' failed (1)
+; emcc -O3 -s WASM=1 -I /usr/local/Cellar/curl/*/include -I /usr/local/Cellar/hdf5/*/include -I /usr/local/Cellar/netcdf/*/include src/main.c
+error: undefined symbol: nc_create (referenced by top-level compiled C/C++ code)
+warning: Link with `-s LLD_REPORT_UNDEFINED` to get more information on undefined symbols
+warning: To disable errors for undefined symbols use `-s ERROR_ON_UNDEFINED_SYMBOLS=0`
+warning: _nc_create may need to be added to EXPORTED_FUNCTIONS if it arrives from a system library
+Error: Aborting compilation due to previous errors
+emcc: error: '/usr/local/bin/node /usr/local/Cellar/emscripten/2.0.31/libexec/src/compiler.js /var/folders/jy/zkmn3bgj13710pnytbgh27800000gn/T/tmp4xz2wm2w.txt' failed (returned 1)
 ```
 
 ## TODO
@@ -57,7 +39,3 @@ shared:ERROR: '/Users/bryce/src/emsdk/upstream/bin/clang -target wasm32-unknown-
 - Figure out how to pass WASM a user-supplied NetCDF file. WASM is heavily sandboxed and I don't want to (1) precompile the NetCDF file in or (2) have to read the entire file. (2) may be unavoidable which sucks.
   - If (2) is the case, it may be possible to only read in _enough_ of the file to get the metadata we need out.
 - Get this reading the attribute names from a NetCDF file the user chooses
-
-```
-
-```
